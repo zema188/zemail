@@ -1,0 +1,23 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/supabase": "^1.1.0",
+    "nuxt": "^3.7.3",
+    "prisma": "^5.3.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.3.1",
+    "sass": "^1.67.0",
+    "vuetify": "^3.4.0-alpha.1"
+  }
+}
