@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   supabase: {
     "redirect": false,
   },
-  css: ['vuetify/lib/styles/main.sass'],
+  css: ['vuetify/lib/styles/main.sass', "@/assets/styles/main.scss"],
   build: {
     transpile: ['vuetify'],
   },

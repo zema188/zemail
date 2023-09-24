@@ -1,0 +1,29 @@
+.auth-form-w {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.auth-form {
+  max-width: 500px;
+  width: 100%;
+  &__footer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 15px 0px 0px;
+  }
+  &__title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  &__link {
+    text-align: end;
+    width: 100%;
+  }
+}

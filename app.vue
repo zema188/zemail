@@ -1,6 +1,5 @@
 <template>
   <div>
-    <NuxtPage>
-    </NuxtPage>
+    <NuxtPage></NuxtPage>
   </div>
 </template>
