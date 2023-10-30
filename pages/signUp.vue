@@ -5,16 +5,16 @@
         Регистрация
       </div>
       <v-text-field
-        v-model="firstname"
+        v-model="login"
         :rules="nameRules"
-        label="Имя"
+        label="Логин"
         required
         class="mb-2"
       ></v-text-field>
       <v-text-field
-        v-model="email"
-        :rules="emailRules"
-        label="E-mail"
+        v-model="name"
+        :rules="nameRules"
+        label="Имя"
         required
         class="mb-2"
       ></v-text-field>
@@ -28,7 +28,7 @@
         <v-alert v-show="errorMessage" :text="errorMessage" type="error"></v-alert>
         <v-btn
             variant="tonal"
-            @click="signUpWithEmail()"
+            @click="signUp()"
         >
             Зарегистрироваться
         </v-btn>
@@ -41,67 +41,61 @@
 </template>
 
 <script setup>
-    let valid = ref(false)
-    let errorMessage = ref('')
-    let firstname = ref('Артем')
-    let nameRules = [
-        value => {
-        if (value) return true
+let valid = ref(false)
+let errorMessage = ref('')
+let login = ref('zemail')
+let name = ref('Артем')
+let nameRules = [
+    value => {
+      if (value) return true
 
-        return 'Имя обязательно'
+      return 'Логин обязательно'
+    },
+]
+let password = ref('123')
+let passwordRules = [
+    value => {
+      if (value) return true
+
+      return 'Пароль обязателен'
+    },
+    value => {
+      if (value.length >= 5) return true
+
+      return 'Пароль должен быть больше 5 символов'
+    },
+]
+const signUp = async () => {
+    errorMessage.value = ''
+    try {
+      const { data, error } = await useFetch('/api/auth/sigUp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-    ]
-    let email = ref('artem.zimin02@gmail.com')
-    let emailRules = [
-        value => {
-        if (value) return true
-
-        return 'Почта обязательна'
-        },
-        value => {
-        if (/.+@.+\..+/.test(value)) return true
-
-        return 'Введите действительную почту'
-        },
-    ]
-    let password = ref('123123')
-    let passwordRules = [
-        value => {
-        if (value) return true
-
-        return 'Пароль обязателен'
-
-        },
-        value => {
-        if (value.length >= 5) return true
-
-        return 'Пароль должен быть больше 5 символов'
-        },
-    ]
-    const client = useSupabaseClient()
-    const signUpWithEmail = async () => {
-        try {
-            if(!valid.value) return
-            const { data, error } = await client.auth.signUp({
-              email: email.value,
-              password: password.value,
-            })
-            errorMessage.value = ''
-            if(error) {
-              errorMessage.value = 'Почта уже используется'
-              throw error
-            }  
-        } catch(error) {
-            console.error(error)
-        }
-
+        body: JSON.stringify(
+          {
+            login: login.value,
+            password: password.value,
+            name: name.value,
+          }
+        ),
+      })
+      if(error) {
+        errorMessage.value = error
+        throw error
+      }  
+    } catch(error) {
+        console.error(error)
     }
-    const user = useSupabaseUser()
-    onMounted(() => {
-        if(user.value) {
-            navigateTo('/')
-        }
-    })
+
+}
+const user = useSupabaseUser()
+onMounted(() => {
+    if(user.value) {
+        navigateTo('/')
+    }
+})
     
 </script>
 

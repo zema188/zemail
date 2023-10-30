@@ -12,6 +12,8 @@ datasource db {
 
 model Users {
   id              Int               @id @default(autoincrement())
+  login           String            @unique
+  password        String            
   name            String            
   created_at      DateTime          @default(now()) @db.DateTime(0)
 }
