@@ -1,15 +1,3 @@
-<template>
-    <div>
-        <h1>главная страница</h1>
-        <v-btn
-            variant="tonal"
-            @click="logOut()"
-        >
-            Выйти
-        </v-btn>
-    </div>
-</template>
-
 <script setup>
 definePageMeta({
     middleware: ["auth"],
@@ -17,17 +5,18 @@ definePageMeta({
 
 import { useUser } from '~/stores/user'
 const userStore = useUser()
-const router = useRouter()
 
-
-const logOut = async() => {
-    try {
-        userStore.logOut()
-    } catch(error) {
-        console.error(error)
-    }
-}
 </script>
+
+<template>
+    <div>
+        <nuxt-layout name="default">
+            <h1>главная страница</h1>
+            <nuxt-link to="/me">me</nuxt-link>
+            <nuxt-link to="/login">login</nuxt-link>
+        </nuxt-layout>
+    </div>
+</template>
 
 <style lang="scss">
 

@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
         return navigateTo('/login')
     } else {
         try {
-            const { data } = await useFetch('/api/auth/getSession', {
+            const { data } = await useFetch('/api/auth/verificationSessionToken', {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',

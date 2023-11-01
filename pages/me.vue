@@ -1,15 +1,19 @@
+<script setup>
+definePageMeta({
+    middleware: ["auth"],
+})
+
+</script>
+
 <template>
     <div>
         <nuxt-layout name="default">
-            <h1>Моя страница</h1>
+            <h1>моя страница</h1>
+            <nuxt-link to="/">index</nuxt-link>
         </nuxt-layout>
     </div>
 </template>
 
-<script setup>
-
-</script>
-
-<style lang="scss" scoped>
+<style lang="scss">
 
 </style>
