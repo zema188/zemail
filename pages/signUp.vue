@@ -25,14 +25,13 @@
         required
       ></v-text-field>
       <div class="auth-form__footer">
-        <v-alert v-show="errorMessage" :text="errorMessage" type="error"></v-alert>
         <v-btn
             variant="tonal"
             @click="signUp()"
         >
             Зарегистрироваться
         </v-btn>
-        <NuxtLink to="/logIn" class="auth-form__link">
+        <NuxtLink to="/login" class="auth-form__link">
             Авторизоваться
         </NuxtLink>
       </div>
@@ -41,8 +40,13 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: ["auth"],
+})
+import { useAlerts } from '~/stores/alerts'
+const alertsStore = useAlerts() 
+const router = useRouter()
 let valid = ref(false)
-let errorMessage = ref('')
 let login = ref('zemail')
 let name = ref('Артем')
 let nameRules = [
@@ -66,9 +70,8 @@ let passwordRules = [
     },
 ]
 const signUp = async () => {
-    errorMessage.value = ''
     try {
-      const { data, error } = await useFetch('/api/auth/sigUp', {
+      const { data } = await useFetch('/api/auth/sigUp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,10 +84,15 @@ const signUp = async () => {
           }
         ),
       })
-      if(error) {
-        errorMessage.value = error
+      if(data.value.error) {
+        const error = data.value.error
+        alertsStore.addAlert(error, 'error')
         throw error
-      }  
+      } 
+      if(data.value.user) {
+        router.push('/')
+        alertsStore.addAlert('Регистрация прошла успешно!', 'success')
+      } 
     } catch(error) {
         console.error(error)
     }

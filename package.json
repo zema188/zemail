@@ -13,14 +13,22 @@
     "@nuxt/devtools": "latest",
     "@nuxtjs/supabase": "^1.1.0",
     "@types/bcrypt": "^5.0.1",
+    "@types/js-cookie": "^3.0.5",
     "nuxt": "^3.7.3",
     "prisma": "^5.3.1"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
+    "@pinia/nuxt": "^0.5.1",
     "@prisma/client": "^5.3.1",
     "bcrypt": "^5.1.1",
+    "js-cookie": "^3.0.5",
+    "pinia": "^2.1.7",
     "sass": "^1.67.0",
+    "uuid": "^9.0.1",
     "vuetify": "^3.4.0-alpha.1"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

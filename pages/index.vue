@@ -3,7 +3,7 @@
         <h1>главная страница</h1>
         <v-btn
             variant="tonal"
-            @click="signOut()"
+            @click="logOut()"
         >
             Выйти
         </v-btn>
@@ -15,13 +15,14 @@ definePageMeta({
     middleware: ["auth"],
 })
 
-const client = useSupabaseClient()
+import { useUser } from '~/stores/user'
+const userStore = useUser()
 const router = useRouter()
-const signOut = async() => {
+
+
+const logOut = async() => {
     try {
-    const { error } = await client.auth.signOut()
-    if(error) throw error
-    router.push('/login')
+        userStore.logOut()
     } catch(error) {
         console.error(error)
     }
