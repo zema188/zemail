@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid'; // Импортируем библиоте�
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-    console.log('teststtstasataas')
     const body = await readBody(event);
     const login = body.login;
     const password = body.password;

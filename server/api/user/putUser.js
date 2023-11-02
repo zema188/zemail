@@ -3,19 +3,14 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     const sessionTokenFromCookie = getCookie(event, 'sessionToken')
+    const body = await readBody(event)
     try {
-        const response = await prisma.users.findFirst({
+        const response = await prisma.users.update({
             where: {
-                sessions: {
-                    some: {
-                        session_token: sessionTokenFromCookie
-                    }
-                }
+                login: body.login
             },
-            select: {
-                name: true,
-                login: true,
-                avatar: true
+            data: {
+                name: body.name,
             }
         })
         if(response) {
@@ -25,5 +20,6 @@ export default defineEventHandler(async (event) => {
         return null
     } catch(err) {
         console.error(err)
+        return null
     }
 })
