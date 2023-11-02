@@ -1,26 +1,30 @@
 <template>
   <div class="auth-form-w">
-    <v-form v-model="valid" :class="['auth-form']">
+    <v-form :class="['auth-form']">
       <div class="auth-form__title">
         Авторизация
       </div>
       <v-text-field
         v-model="login"
         :rules="loginRules"
-        label="E-mail"
+        label="Логин"
         required
         class="mb-2"
+        @keydown.enter="signIn()"
       ></v-text-field>
       <v-text-field
         v-model="password"
         :rules="passwordRules"
         label="Пароль"
         required
+        type="password"
+        @keydown.enter="signIn()"
       ></v-text-field>
       <div class="auth-form__footer">
         <v-btn
           variant="tonal"
           @click="signIn()"
+          :disabled="toggleDisabledSaveBtn"
         >
             Войти
         </v-btn>
@@ -33,16 +37,16 @@
 </template>
 
 <script setup>
+import Cookies from 'js-cookie';
+import { useAlerts } from '~/stores/alerts'
+
 definePageMeta({
   middleware: ["auth"],
 })
-import Cookies from 'js-cookie';
 
-import { useAlerts } from '~/stores/alerts'
 const alertsStore = useAlerts() 
 const router = useRouter()
 
-let valid = ref(false)
 let login = ref('zemail')
 let loginRules = [
     value => {
@@ -60,7 +64,9 @@ let passwordRules = [
     return 'Пароль обязателен'
     }
 ]
+
 const signIn = async () => {
+  if(!(login.value && password.value)) return
   try {
       const { data } = await useFetch('/api/auth/sigIn', {
         method: 'POST',
@@ -90,10 +96,9 @@ const signIn = async () => {
     }
 }
 
-onMounted(() => {
+const toggleDisabledSaveBtn = computed(() => {
+  return !(login.value && password.value)
 })
-
-
 </script>
 
 <style lang="scss">

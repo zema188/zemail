@@ -22,25 +22,17 @@ export default defineEventHandler(async (event) => {
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
         if (passwordMatch) {
-            // Генерируем сессионный токен
             const sessionToken = uuidv4();
 
-            // Создаем сессию в базе данных
             const session = await prisma.sessions.create({
                 data: {
                     user_id: user.id,
                     session_token: sessionToken,
                 },
             });
-
-
-            // Устанавливаем сессионный токен в куки
-            const cookieOptions = {
-                maxAge: 3600000, // Установите срок действия куки по своему усмотрению (например, 1 час)
-                httpOnly: true, // Запретить JavaScript доступ к куки
-            };
-
-            // Устанавливаем куки с сессионным токеном
+            if(!session) {
+                throw new Error
+            }
             setCookie(event, 'sessionToken', sessionToken)
             return { user };
         } else {

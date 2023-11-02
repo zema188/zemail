@@ -53,13 +53,13 @@ export const useUser = defineStore('user', () => {
         user.value = {}
     }
 
-    async function putUser(info) {
+    async function putUser(field) {
         try {
             let url = '/api/user/putUser'
             let body = { ...user.value }
-            if(info) {
+            if(field) {
                 url = '/api/user/putFieldUser'
-                body = { ...info }
+                body = { ...field }
                 body.login = user.value.login
             }
             const { data } = await useFetch(url, {
@@ -70,9 +70,6 @@ export const useUser = defineStore('user', () => {
                 body: JSON.stringify(body),
             })
             if(data.value) {
-                if(data.value.user) {
-                    return 'Данные изменены'
-                }
                 if(data.value.success) {
                     return data.value.success
                 }

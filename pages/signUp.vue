@@ -1,15 +1,16 @@
 <template>
   <div class="auth-form-w">
-    <v-form v-model="valid" :class="['auth-form']">
+    <v-form :class="['auth-form']">
       <div class="auth-form__title">
         Регистрация
       </div>
       <v-text-field
         v-model="login"
-        :rules="nameRules"
+        :rules="loginRules"
         label="Логин"
         required
         class="mb-2"
+        @keydown.enter="signUp()"
       ></v-text-field>
       <v-text-field
         v-model="name"
@@ -17,17 +18,21 @@
         label="Имя"
         required
         class="mb-2"
+        @keydown.enter="signUp()"
       ></v-text-field>
       <v-text-field
         v-model="password"
         :rules="passwordRules"
         label="Пароль"
         required
+        type="password"
+        @keydown.enter="signUp()"
       ></v-text-field>
       <div class="auth-form__footer">
         <v-btn
             variant="tonal"
             @click="signUp()"
+            :disabled="toggleDisabledSaveBtn"
         >
             Зарегистрироваться
         </v-btn>
@@ -40,71 +45,74 @@
 </template>
 
 <script setup>
+import { useAlerts } from '~/stores/alerts'
+
 definePageMeta({
     middleware: ["auth"],
 })
-import { useAlerts } from '~/stores/alerts'
+
 const alertsStore = useAlerts() 
 const router = useRouter()
-let valid = ref(false)
+
 let login = ref('zemail')
 let name = ref('Артем')
+
+let loginRules = [
+    value => {
+    if (value) return true
+      return 'Логин обязателен'
+    }
+]
+
 let nameRules = [
     value => {
-      if (value) return true
-
-      return 'Логин обязательно'
-    },
+    if (value) return true
+      return 'Имя обязателено'
+    }
 ]
+
 let password = ref('123')
 let passwordRules = [
     value => {
-      if (value) return true
-
+    if (value) return true
       return 'Пароль обязателен'
-    },
-    value => {
-      if (value.length >= 5) return true
-
-      return 'Пароль должен быть больше 5 символов'
-    },
+    }
 ]
-const signUp = async () => {
-    try {
-      const { data } = await useFetch('/api/auth/sigUp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-          {
-            login: login.value,
-            password: password.value,
-            name: name.value,
-          }
-        ),
-      })
-      if(data.value.error) {
-        const error = data.value.error
-        alertsStore.addAlert(error, 'error')
-        throw error
-      } 
-      if(data.value.user) {
-        router.push('/')
-        alertsStore.addAlert('Регистрация прошла успешно!', 'success')
-      } 
-    } catch(error) {
-        console.error(error)
-    }
 
+const signUp = async () => {
+  if(!(login.value && password.value && name.value)) return
+  try {
+    const { data } = await useFetch('/api/auth/sigUp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        {
+          login: login.value,
+          password: password.value,
+          name: name.value,
+        }
+      ),
+    })
+    if(data.value.error) {
+      const error = data.value.error
+      alertsStore.addAlert(error, 'error')
+      throw error
+    } 
+    if(data.value.user) {
+      router.push('/')
+      alertsStore.addAlert('Регистрация прошла успешно!', 'success')
+    } 
+  } catch(error) {
+      console.error(error)
+  }
 }
-const user = useSupabaseUser()
-onMounted(() => {
-    if(user.value) {
-        navigateTo('/')
-    }
+
+const toggleDisabledSaveBtn = computed(() => {
+  return !(login.value && password.value && name.value)
 })
-    
+  
 </script>
 
 <style lang="scss">

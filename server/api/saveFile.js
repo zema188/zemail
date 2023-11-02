@@ -1,5 +1,5 @@
 import { writeFile } from 'fs/promises';
-import { v4 as uuidv4 } from 'uuid'; // Импортируем библиотеку uuid
+import { v4 as uuidv4 } from 'uuid';
 
 export default defineEventHandler(async (event) => {
     try {

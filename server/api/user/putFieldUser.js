@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-    const sessionTokenFromCookie = getCookie(event, 'sessionToken')
+    // const sessionTokenFromCookie = getCookie(event, 'sessionToken')
     const body = await readBody(event)
     try {
         const response = await prisma.users.update({
@@ -15,10 +15,11 @@ export default defineEventHandler(async (event) => {
         })
         if (response) {
             return { success: true };
+        } else {
+            throw new Error
         }
-        return null
     } catch(err) {
         console.error(err)
-        return null
+        return {error: 'Произошла ошибка'}
     }
 })

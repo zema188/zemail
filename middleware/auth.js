@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie';
-
 export default defineNuxtRouteMiddleware( async (to, from) => {
     const token = useCookie('sessionToken')
     if (!token.value) {
@@ -26,7 +25,6 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
                 }
 
                 if(data.value.token === "invalid token") {
-                    console.log('test')
                     Cookies.remove('sessionToken')
                     return navigateTo('/login')
                 }
@@ -34,6 +32,5 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
         } catch(err) {
             console.error(err)
         }
-
     }
 })
